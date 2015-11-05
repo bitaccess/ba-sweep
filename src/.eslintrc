@@ -1,0 +1,13 @@
+{
+    "globals": {
+        "App": true,
+        "google": true,
+        "grecaptcha": true,
+        "ga": true,
+        "bitcore": true,
+        "qrcode": true,
+        "$": true
+    },
+    "rules": {
+    }
+}
