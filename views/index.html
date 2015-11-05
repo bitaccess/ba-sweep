@@ -23,7 +23,7 @@
   <body>
     <div class='app-page' data-page='start'>
       <div class='app-topbar'>
-        <div class='app-title'>{{ __("Sweep Your Bitcoins") }}</div>
+        <div class='app-title'>{{ __("Send Your Bitcoins") }}</div>
       </div>
       <div class='app-content start-page'>
         <div class='app-section start-page'>
@@ -38,7 +38,7 @@
           {{ __("The reason we provide this service is simply to offload some of the support requests we regularly receive.") }}
         </div>
         <div class='app-section start-page'>
-          <div id='buy' class='app-button btac-orange next'>{{ __("SWEEP YOUR BITCOINS") }}</div>
+          <div id='buy' class='app-button btac-orange next'>{{ __("SEND YOUR BITCOINS") }}</div>
         </div>
       </div>
     </div>
@@ -72,11 +72,14 @@
           <div id='photo' class='app-button btac-orange next'>{{ __("TAKE PHOTO") }}</div>
         </div>
         <div class='app-section'>
-          <div class='btc-amount'>{{ __("Pending") }}:&nbsp;<span id='unspent-unconfirmed'>?</span>&nbsp;BTC</div>
-          <div class='btc-amount'>{{ __("Available") }}:&nbsp;<span id='unspent-confirmed'>?</span>&nbsp;BTC</div>
+          <input id='private-key-input' class='app-input private-key underline' type='text' autofocus placeholder='L3tH1siSwhA7aPR1vAt3k3YLoOkSL1K3k1ndaSoRTaaw3Som3heY'>
+        </div>
+        <div class='app-section address'>
+          <div>{{ __("Address") }}:&nbsp;<span id='address'></span></div>
         </div>
         <div class='app-section'>
-          <input id='private-key-input' class='app-input private-key underline' type='text' autofocus placeholder='1MnCXkpLJhZpNYXA7xDGE7AEJWS257BvA3'>
+          <div class='btc-amount'>{{ __("Pending") }}:&nbsp;<span id='unspent-unconfirmed'>?</span>&nbsp;BTC</div>
+          <div class='btc-amount'>{{ __("Available") }}:&nbsp;<span id='unspent-confirmed'>?</span>&nbsp;BTC</div>
         </div>
         <div class='app-section'>
           <div id='go-bitcoins' class='app-button btac-orange next'>{{ __("NEXT") }}</div>
@@ -87,7 +90,7 @@
     <div class='app-page' data-page='bitcoin-address'>
       <div class='app-topbar'>
         <div class='app-button left' data-back></div>
-        <div class='app-title'>{{ __("Sweep Your Bitcoins") }}</div>
+        <div class='app-title'>{{ __("Send Your Bitcoins") }}</div>
       </div>
       <div class='app-content'>
         <div class='app-section'>
@@ -115,7 +118,7 @@
           <div id='view-tx' class='app-button btac-orange next'>{{ __("VIEW DETAILS") }}</div>
         </div>
         <div class='app-section'>
-          <div id='go-bitcoins' class='app-button btac-orange next'>{{ __("SWEEP YOUR BITCOINS") }}</div>
+          <div id='go-bitcoins' class='app-button btac-orange next'>{{ __("SEND YOUR BITCOINS") }}</div>
         </div>
       </div>
     </div>

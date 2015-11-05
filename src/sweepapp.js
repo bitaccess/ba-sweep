@@ -45,6 +45,8 @@ App.controller('private-key', function (page) {
   var $photoButton = $page.find('#photo');
   var $video = $page.find('#video');
   var $privateKey = $page.find('#private-key-input');
+  var $addressSection = $page.find('.address');
+  var $address = $page.find('#address');
   var $balanceConfirmed = $page.find('#unspent-confirmed');
   var $balanceUnconfirmed = $page.find('#unspent-unconfirmed');
   var $instructions = $page.find('.instructions');
@@ -54,6 +56,7 @@ App.controller('private-key', function (page) {
   $scan.parent().hide();
   $video.parent().hide();
   $instructionsScan.hide();
+  $addressSection.hide();
 
   $photoButton.on('click', $photoInput.trigger.bind($photoInput, 'click'));
   $photoInput.on('change', function(e) {
@@ -83,6 +86,7 @@ App.controller('private-key', function (page) {
         if (err) {
           $privateKey.removeClass('valid');
           $privateKey.addClass('invalid');
+          $addressSection.hide();
           return;
         }
 
@@ -93,7 +97,11 @@ App.controller('private-key', function (page) {
           // clearInterval(timer);
           App.sweep.bitcoinPrivateKey = privateKey;
 
-          getBalance(privateKey, function(err, totals) {
+          var key = new bitcore.PrivateKey(privateKey);
+          var fromAddress = key.publicKey.toAddress();
+          $address.text(fromAddress);
+          $addressSection.fadeIn();
+          getBalance(fromAddress, function(err, totals) {
             console.log(totals);
             $balanceConfirmed.text(totals.balance);
             $balanceUnconfirmed.text(totals.unconfirmedBalance);
@@ -102,22 +110,21 @@ App.controller('private-key', function (page) {
         } else {
           $privateKey.removeClass('valid');
           $privateKey.addClass('invalid');
+          $addressSection.hide();
         }
       });
     } else {
       $privateKey.removeClass('valid');
       $privateKey.removeClass('invalid');
       $next.parent().hide();
+      $addressSection.hide();
       listening = true;
     }
   }
   // check every five seconds to support iOS pasting, which doesn't fire 'paste' event
   /*var timer = */setInterval(privateKeyEntered, 200);
 
-  function getBalance(privateKey, done) {
-    var key = new bitcore.PrivateKey(privateKey);
-    var fromAddress = key.publicKey.toAddress();
-
+  function getBalance(fromAddress, done) {
     App.sweep.getBalance(fromAddress, function(err, info) {
       if (err) return done(err);
 

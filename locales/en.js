@@ -116,5 +116,7 @@
 	"Please enter the Bitcoin Address you wish to send to.": "Please enter the Bitcoin Address you wish to send to.",
 	"A total of TT_AMOUNT BTC is currently tied up in pending transactions and cannot be sent right now. Would you like to send the rest now or wait?": "A total of TT_AMOUNT BTC is currently tied up in pending transactions and cannot be sent right now. Would you like to send the rest now or wait?",
 	"Your bitcoins have been sent. Have a nice day!": "Your bitcoins have been sent. Have a nice day!",
-	"VIEW DETAILS": "VIEW DETAILS"
+	"VIEW DETAILS": "VIEW DETAILS",
+	"Send Your Bitcoins": "Send Your Bitcoins",
+	"SEND YOUR BITCOINS": "SEND YOUR BITCOINS"
 }
