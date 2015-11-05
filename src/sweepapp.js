@@ -269,6 +269,8 @@ App.controller('bitcoin-address', function (page) {
   $address.on('paste', addressEntered);
 
   $sweep.on('click', function(e) {
+    $scan.parent().hide();
+    $instructionsScan.hide();
     $sweep.parent().hide();
     if (typeof navigator.getUserMedia == 'function') {
       $video.parent().hide();
