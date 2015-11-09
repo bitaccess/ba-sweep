@@ -51,7 +51,11 @@ App.controller('private-key', function (page) {
   var $balanceUnconfirmed = $page.find('#unspent-unconfirmed');
   var $instructions = $page.find('.instructions');
   var $instructionsScan = $page.find('.instructions-scan');
+  var $wait = $page.find('.wait');
+  var $balance = $page.find('.balance');
   var $help = $page.find('.help');
+  $wait.hide();
+  $balance.hide();
   $next.parent().hide();
   $scan.parent().hide();
   $video.parent().hide();
@@ -62,6 +66,7 @@ App.controller('private-key', function (page) {
   $photoInput.on('change', function(e) {
     App.sweep.incomingImage('private-key-photo', e);
     qrcode.callback = function(data) {
+      console.log('data', data);
       var privateKey = parseBitcoinPrivateKey(data);
       if (privateKey) {
         $privateKey.val(privateKey);
@@ -82,42 +87,40 @@ App.controller('private-key', function (page) {
     if (privateKey.length == 52) {
       if (!listening) return;
       listening = false;
-      App.sweep.validateBitcoinPrivateKey(privateKey, function(err, valid) {
-        if (err) {
-          $privateKey.removeClass('valid');
-          $privateKey.addClass('invalid');
-          $addressSection.hide();
-          return;
-        }
+      var valid = App.sweep.validateBitcoinPrivateKey(privateKey);
+      if (valid) {
+        $privateKey.addClass('valid');
+        $privateKey.removeClass('invalid');
+        // $input.parent().hide();
+        // clearInterval(timer);
+        App.sweep.bitcoinPrivateKey = privateKey;
 
-        if (valid) {
-          $privateKey.addClass('valid');
-          $privateKey.removeClass('invalid');
-          // $input.parent().hide();
-          // clearInterval(timer);
-          App.sweep.bitcoinPrivateKey = privateKey;
-
-          var key = new bitcore.PrivateKey(privateKey);
-          var fromAddress = key.publicKey.toAddress();
-          $address.text(fromAddress);
-          $addressSection.fadeIn();
-          getBalance(fromAddress, function(err, totals) {
-            console.log(totals);
-            $balanceConfirmed.text(totals.balance);
-            $balanceUnconfirmed.text(totals.unconfirmedBalance);
-            if (totals.balance > 0) showButton();
-          });
-        } else {
-          $privateKey.removeClass('valid');
-          $privateKey.addClass('invalid');
-          $addressSection.hide();
-        }
-      });
+        var key = new bitcore.PrivateKey(privateKey);
+        var fromAddress = key.publicKey.toAddress();
+        $address.text(fromAddress);
+        $addressSection.fadeIn();
+        $wait.show();
+        $balance.hide();
+        getBalance(fromAddress, function(err, totals) {
+          $wait.hide();
+          console.log(totals);
+          $balance.show();
+          $balanceConfirmed.text(totals.balance);
+          $balanceUnconfirmed.text(totals.unconfirmedBalance);
+          if (totals.balance > 0) showButton();
+        });
+      } else {
+        $privateKey.removeClass('valid');
+        $privateKey.addClass('invalid');
+        $addressSection.hide();
+        $balance.hide();
+      }
     } else {
       $privateKey.removeClass('valid');
       $privateKey.removeClass('invalid');
       $next.parent().hide();
       $addressSection.hide();
+      $balance.hide();
       listening = true;
     }
   }
@@ -242,26 +245,19 @@ App.controller('bitcoin-address', function (page) {
     if (address.length == 34) {
       if (!listening) return;
       listening = false;
-      App.sweep.validateBitcoinAddress(address, function(err, valid) {
-        if (err) {
-          $address.removeClass('valid');
-          $address.addClass('invalid');
-          return;
-        }
-
-        if (valid) {
-          $address.addClass('valid');
-          $address.removeClass('invalid');
-          // $input.parent().hide();
-          $sweep.parent().show();
-          // clearInterval(timer);
-          showSweepButton();
-          App.sweep.bitcoinAddress = address;
-        } else {
-          $address.removeClass('valid');
-          $address.addClass('invalid');
-        }
-      });
+      var valid = App.sweep.validateBitcoinAddress(address);
+      if (valid) {
+        $address.addClass('valid');
+        $address.removeClass('invalid');
+        // $input.parent().hide();
+        $sweep.parent().show();
+        // clearInterval(timer);
+        showSweepButton();
+        App.sweep.bitcoinAddress = address;
+      } else {
+        $address.removeClass('valid');
+        $address.addClass('invalid');
+      }
     } else {
       $address.removeClass('valid');
       $address.removeClass('invalid');
@@ -277,6 +273,8 @@ App.controller('bitcoin-address', function (page) {
 
   $sweep.on('click', function(e) {
     $scan.parent().hide();
+    $instructions.hide();
+    $address.parent().hide();
     $instructionsScan.hide();
     $sweep.parent().hide();
     if (typeof navigator.getUserMedia == 'function') {
@@ -401,16 +399,22 @@ App.analytics = {
   }
 };
 
-App.sweep.validateBitcoinPrivateKey = function(privateKey, done) {
-  setTimeout(function() {
-    done(null, true);
-  }, 100);
+App.sweep.validateBitcoinPrivateKey = function(privateKey) {
+  try {
+    new bitcore.PrivateKey(privateKey);
+  } catch(e) {
+    return false;
+  }
+  return true;
 };
 
-App.sweep.validateBitcoinAddress = function(address, done) {
-  setTimeout(function() {
-    done(null, true);
-  }, 100);
+App.sweep.validateBitcoinAddress = function(address) {
+  try {
+    bitcore.Address.fromString(address);
+  } catch(e) {
+    return false;
+  }
+  return true;
 };
 
 App.sweep.sweepBitcoins = function(privateKey, toAddress, done) {

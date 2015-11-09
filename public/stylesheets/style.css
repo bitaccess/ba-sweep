@@ -51,7 +51,6 @@ input.photo {
   margin: 0 auto;
   text-align: center;
   padding-left: 0px;
-  margin-top: 1rem;
   text-transform: uppercase;
 }
 .app-section {
@@ -106,90 +105,12 @@ input.photo {
   padding-top: 20px;
 }
 
-.btm-details {
-  padding: 0px 20px 20px 20px;
-  font-size: 80%;
-}
-.btm-details .btm-info {
-  padding: 0px 0px 20px 0px;
-}
-.btm-details .btm-info-item {
-  padding: 5px 0px 0px 0px;
-}
-.btm-details .btm-info-item .header {
-  text-transform: uppercase;
-  font-weight: bold;
-}
-.btm-schedule {
-  padding: 5px 0px 0px 0px;
-}
-.btm-schedule .time {
-  float: right;
-}
-#one-time-address {
-  font-size: 50%;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  user-select: text;
-}
-.app-content.receipt .header {
-  text-align: left;
-  text-transform: uppercase;
-  font-weight: bold;
-  color: #fff;
-}
-.app-content.receipt .value {
-  padding-left: 20px;
-  text-align: left;
-  color: #2E3D4C;
-  word-wrap: break-word;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  user-select: text;
-}
-.receipt-details {
-  /* padding: 10px 20px 20px 20px; */
-  /* font-size: 80%; */
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  user-select: text;
-}
-/* .receipt-details .receipt-info-item { */
-/*   padding: 10px 10px 10px 10px; */
-/* } */
-/* .receipt-details .receipt-info-item .header { */
-/*   text-transform: uppercase; */
-/*   font-weight: bold; */
-/* } */
-
-/* center recaptcha */
-div.g-recaptcha div div {
-  margin: 0 auto;
-}
-
-.iti-flag {
-  background-image: url("/images/flags.png");
-}
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-  .iti-flag {
-    background-image: url("/images/flags@2x.png");
-  }
-}
-
 div.underlabel {
   text-align: left;
   text-transform: uppercase;
   font-size: 0.5em;
   font-weight: bold;
   padding-left: 10px;
-}
-span.nationality {
-  padding-left: 10px;
-  float: left;
-  color: #696969;
-}
-div#terms {
-  background: #EEE;
 }
 
 select.underline, input.underline {
@@ -202,71 +123,39 @@ select.underline, input.underline {
   padding-top: 10px;
   border-top: 1px solid white !important;
 }
-.pin-entry {
-  width: 250px;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-.pin-entered {
-  width: 280px;
-  background-size: 1.0em !important;
-}
-.to-delete {
-  text-decoration: line-through;
-}
 
-
-img.sms {
-  width: 7rem;
-  padding-top: 5rem;
-}
-#captcha-wait {
-  width: 244px;
-  height: 144px;
-}
-#captcha-wait div {
-  padding-top: 50px;
-}
 .help {
   padding-left: 20px;
   font-style: italic;
+}
+#address {
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
 }
 .bitcoin-address {
   width: 400px;
   margin-left: auto !important;
   margin-right: auto !important;
 }
-.code {
-  width: 100px;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-.bitcoin-address.valid, .code.valid {
+.bitcoin-address.valid, .private-key.valid {
   background-image: url('/images/code-accepted.png') !important;
   background-size: 1.5em;
   background-repeat: no-repeat !important;
-  background-position: 95% !important;
+  background-position: 99% !important;
 }
-.bitcoin-address.invalid, .code.invalid, .pin-entered {
+.bitcoin-address.invalid, .private-key.invalid {
   background-image: url('/images/code-error.png') !important;
   background-size: 1.5em;
   background-repeat: no-repeat !important;
-  background-position: 95% !important;
+  background-position: 99% !important;
 }
-.smackash-pin-input {
-  width: 200px;
+.private-key {
+  max-width: 550px;
   margin-left: auto !important;
   margin-right: auto !important;
 }
 .spinner {
-  display: block;
-  font-size: 100px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #f7931a;
-  background-image: url('/images/loadingbg.jpg');
-  border: solid 10px #c15800;
   background-repeat: no-repeat;
   -webkit-animation: mask 3s infinite alternate;
   -moz-animation: mask 3s infinite alternate;
@@ -274,7 +163,7 @@ img.sms {
   -o-animation: mask 3s infinite alternate;
   animation: mask 3s infinite alternate;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 0 !important;
 }
 
 @-webkit-keyframes mask {
@@ -311,12 +200,6 @@ img.sms {
 100% { transform: rotate(180deg); }
 }
 
-.field {
-  width: 99%;
-}
-.slimField {
-  width: 30%;
-}
 .text-left {
   text-align: left;
 }
@@ -345,18 +228,9 @@ input.app-input {
     color: #FFF;
 }
 
-.intl-tel-input {
-  width: 300px;
-}
-
-.intl-tel-input {
-  width: 300px;
-}
-
 .app-dialog .button.cancel {
     background-color: #FAB536;
 }
-
 
 .start-page {
   z-index: 9999;
@@ -366,7 +240,6 @@ input.app-input {
   background-image: url('../images/home-bg.jpg');
   background-size: cover;
 }
-
 
 .app-section.start-page {
   background-color: transparent !important;
