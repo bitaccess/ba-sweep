@@ -3,8 +3,8 @@ App.sweep.photos = {};
 
 var bitcore = require('bitcore-lib');
 
-function btcToSatoshi(btc) { return Math.round(btc * 100000000); }
-function satoshiToBTC(sat) { return sat / 100000000; }
+function btcToSatoshi(btc) { return Math.round(btc * 1e8); }
+function satoshiToBTC(sat) { return sat / 1e8; }
 
 window.ga = function() {};
 
@@ -53,7 +53,9 @@ App.controller('private-key', function (page) {
   var $instructionsScan = $page.find('.instructions-scan');
   var $wait = $page.find('.wait');
   var $balance = $page.find('.balance');
+  var $txFee = $page.find('#tx-fee');
   var $help = $page.find('.help');
+  var $helpFee = $page.find('.help-fee');
   $wait.hide();
   $balance.hide();
   $next.parent().hide();
@@ -107,6 +109,7 @@ App.controller('private-key', function (page) {
           $balance.show();
           $balanceConfirmed.text(totals.balance);
           $balanceUnconfirmed.text(totals.unconfirmedBalance);
+          $txFee.text(satoshiToBTC(10000)); // TODO: ensure this is consistent with what is actually used
           if (totals.balance > 0) showButton();
         });
       } else {
@@ -154,6 +157,10 @@ App.controller('private-key', function (page) {
 
   $help.on('click', function(e) {
     App.dialog(App.sweep.dialogHelpBitcoinPrivateKey, function() {
+    });
+  });
+  $helpFee.on('click', function(e) {
+    App.dialog(App.sweep.dialogHelpFee, function() {
     });
   });
 
@@ -209,16 +216,21 @@ App.controller('bitcoin-address', function (page) {
   var $photoButton = $page.find('#photo');
   var $video = $page.find('#video');
   var $address = $page.find('#bitcoin-address-input');
+  var $tx = $page.find('.tx');
+  var $txAmount = $page.find('#tx-amount');
+  var $txFee = $page.find('#tx-fee');
   var $sent = $page.find('.sent');
   var $viewDetails = $page.find('#view-tx');
   var $instructions = $page.find('.instructions');
   var $instructionsScan = $page.find('.instructions-scan');
   var $help = $page.find('.help');
+  var $helpFee = $page.find('.help-fee');
   $sweep.parent().hide();
   $scan.parent().hide();
   $video.parent().hide();
   $instructionsScan.hide();
   $sent.hide();
+  $tx.hide();
   $viewDetails.parent().hide();
 
   $photoButton.on('click', $photoInput.trigger.bind($photoInput, 'click'));
@@ -283,7 +295,12 @@ App.controller('bitcoin-address', function (page) {
       $instructionsScan.hide();
       $video.html5_qrcode_stop();
     }
-    App.sweep.sweepBitcoins(App.sweep.bitcoinPrivateKey, App.sweep.bitcoinAddress, function(err, result) {
+    App.sweep.sweepBitcoins(App.sweep.bitcoinPrivateKey, App.sweep.bitcoinAddress, function(tx) {
+      console.log(tx, tx.outputAmount);
+      $txAmount.text(satoshiToBTC(tx.outputAmount));
+      $txFee.text(satoshiToBTC(tx.getFee()));
+      $tx.fadeIn();
+    }, function(err, result) {
       if (err) {
         App.dialog(App.sweep.dialogErrorReload, function() {
         });
@@ -310,6 +327,10 @@ App.controller('bitcoin-address', function (page) {
 
   $help.on('click', function(e) {
     App.dialog(App.sweep.dialogHelpBitcoinAddress, function() {
+    });
+  });
+  $helpFee.on('click', function(e) {
+    App.dialog(App.sweep.dialogHelpFee, function() {
     });
   });
 
@@ -417,7 +438,7 @@ App.sweep.validateBitcoinAddress = function(address) {
   return true;
 };
 
-App.sweep.sweepBitcoins = function(privateKey, toAddress, done) {
+App.sweep.sweepBitcoins = function(privateKey, toAddress, onTx, done) {
   var key = new bitcore.PrivateKey(privateKey);
   var fromAddress = key.publicKey.toAddress();
 
@@ -432,6 +453,8 @@ App.sweep.sweepBitcoins = function(privateKey, toAddress, done) {
     }
     console.log('transaction:', transaction.toJSON());
     App.sweep.lastTransaction = transaction;
+    console.log('tx:', transaction, transaction.outputAmount);
+    onTx(transaction);
 
     if (confirmedUnspents.length < unspents.length) {
       var unconfirmedSatoshis = App.sweep.tallyInputs(App.sweep.filterInputsByConfirmation(unspents, false));
@@ -470,7 +493,7 @@ App.sweep.tallyInputs = function(inputs) {
 App.sweep.createTransaction = function(privateKey, toAddress, unspents) {
   var total = App.sweep.tallyInputs(unspents);
   console.log('total unspent:', total);
-  var amount = total - (60 * 100); // 60 bits is the fee I can remember
+  var amount = total - 10000; // create fee
   console.log('minus fee:', amount);
   if (amount > 0) {
     var transaction = new bitcore.Transaction()

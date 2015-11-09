@@ -118,5 +118,9 @@
 	"Your bitcoins have been sent. Have a nice day!": "Your bitcoins have been sent. Have a nice day!",
 	"VIEW DETAILS": "VIEW DETAILS",
 	"Send Your Bitcoins": "Send Your Bitcoins",
-	"SEND YOUR BITCOINS": "SEND YOUR BITCOINS"
+	"SEND YOUR BITCOINS": "SEND YOUR BITCOINS",
+	"Network Fee": "Network Fee",
+	"Amount": "Amount",
+	"What is a Network Fee?": "What is a Network Fee?",
+	"All Bitcoin transactions must include a small fee which is collected by the participants in the Bitcoin network.": "All Bitcoin transactions must include a small fee which is collected by the participants in the Bitcoin network."
 }

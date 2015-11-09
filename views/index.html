@@ -80,6 +80,7 @@
         <div class='app-section balance'>
           <div class='btc-amount'>{{ __("Pending") }}:&nbsp;<span id='unspent-unconfirmed'>?</span>&nbsp;BTC</div>
           <div class='btc-amount'>{{ __("Available") }}:&nbsp;<span id='unspent-confirmed'>?</span>&nbsp;BTC</div>
+          <div class='btc-amount'>{{ __("Network Fee") }}:&nbsp;<span id='tx-fee'>?</span>&nbsp;BTC<span class='help-fee'>{{ __("What's this?") }}</span></div>
         </div>
         <div class='app-section wait'>
           <img class='spinner' src='/images/code-loading.png'>
@@ -113,6 +114,10 @@
         </div>
         <div class='app-section'>
           <input id='bitcoin-address-input' class='app-input bitcoin-address underline' type='text' autofocus placeholder='1MaNdth3n7H1s1SaB17co1NaDdR3sSoKaY'>
+        </div>
+        <div class='app-section tx'>
+          <div class='btc-amount'>{{ __("Amount") }}:&nbsp;<span id='tx-amount'>?</span>&nbsp;BTC</div>
+          <div class='btc-amount'>{{ __("Network Fee") }}:&nbsp;<span id='tx-fee'>?</span>&nbsp;BTC<span class='help-fee'>{{ __("What's this?") }}</span></div>
         </div>
         <div class='app-section sent'>
           <div class='instructions-sent'>
@@ -150,6 +155,11 @@
       App.sweep.dialogHelpBitcoinAddress = {
         title        : '{{ __("What is a Bitcoin Address?") }}',
         text         : '{{ __("It is a thing you need to receive bitcoins.") }}',
+        cancelButton : '{{ __("Okay, I get it.") }}'
+      };
+      App.sweep.dialogHelpFee = {
+        title        : '{{ __("What is a Network Fee?") }}',
+        text         : '{{ __("All Bitcoin transactions must include a small fee which is collected by the participants in the Bitcoin network.") }}',
         cancelButton : '{{ __("Okay, I get it.") }}'
       };
       App.sweep.textFinishedTitle = '{{ __("Finished") }}';

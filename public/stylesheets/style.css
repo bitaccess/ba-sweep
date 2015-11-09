@@ -124,7 +124,7 @@ select.underline, input.underline {
   border-top: 1px solid white !important;
 }
 
-.help {
+.help, .help-fee {
   padding-left: 20px;
   font-style: italic;
 }
