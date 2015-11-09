@@ -84,7 +84,7 @@ App.controller('private-key', function (page) {
   var listening = true;
   function privateKeyEntered() {
     var privateKey = $privateKey.val().trim();
-    if (privateKey.length == 52) {
+    if (privateKey.length == 51 || privateKey.length == 52) {
       if (!listening) return;
       listening = false;
       var valid = App.sweep.validateBitcoinPrivateKey(privateKey);
@@ -242,7 +242,7 @@ App.controller('bitcoin-address', function (page) {
   var listening = true;
   function addressEntered() {
     var address = $address.val().trim();
-    if (address.length == 34) {
+    if (address.length >= 26 && address.length <= 35) {
       if (!listening) return;
       listening = false;
       var valid = App.sweep.validateBitcoinAddress(address);
