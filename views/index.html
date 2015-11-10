@@ -85,6 +85,9 @@
         <div class='app-section wait'>
           <img class='spinner' src='/images/code-loading.png'>
         </div>
+        <div class='app-section unconfirmed'>
+          <div>{{ __("You have pending transactions. Please wait at least 10 minutes and then try again.") }}</div>
+        </div>
         <div class='app-section'>
           <div id='go-bitcoins' class='app-button btac-orange next'>{{ __("NEXT") }}</div>
         </div>
@@ -123,6 +126,9 @@
           <div class='instructions-sent'>
             {{ __("Your bitcoins have been sent. Have a nice day!") }}
           </div>
+        </div>
+        <div class='app-section self'>
+          <div>{{ __("You are attempting to send the bitcoins to the same address you are sending from. This just wastes money.") }}</div>
         </div>
         <div class='app-section sent'>
           <div id='view-tx' class='app-button btac-orange next'>{{ __("VIEW DETAILS") }}</div>

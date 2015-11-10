@@ -53,11 +53,13 @@ App.controller('private-key', function (page) {
   var $instructionsScan = $page.find('.instructions-scan');
   var $wait = $page.find('.wait');
   var $balance = $page.find('.balance');
+  var $pendingWarning = $page.find('.unconfirmed');
   var $txFee = $page.find('#tx-fee');
   var $help = $page.find('.help');
   var $helpFee = $page.find('.help-fee');
   $wait.hide();
   $balance.hide();
+  $pendingWarning.hide();
   $next.parent().hide();
   $scan.parent().hide();
   $video.parent().hide();
@@ -103,6 +105,7 @@ App.controller('private-key', function (page) {
         $addressSection.fadeIn();
         $wait.show();
         $balance.hide();
+        $pendingWarning.hide();
         getBalance(fromAddress, function(err, totals) {
           $wait.hide();
           console.log(totals);
@@ -110,13 +113,18 @@ App.controller('private-key', function (page) {
           $balanceConfirmed.text(totals.balance);
           $balanceUnconfirmed.text(totals.unconfirmedBalance);
           $txFee.text(satoshiToBTC(10000)); // TODO: ensure this is consistent with what is actually used
-          if (totals.balance > 0) showButton();
+          if (totals.unconfirmedBalance != 0) {
+            $pendingWarning.show();
+          } else if (totals.balance > 0) {
+            showButton();
+          }
         });
       } else {
         $privateKey.removeClass('valid');
         $privateKey.addClass('invalid');
         $addressSection.hide();
         $balance.hide();
+        $pendingWarning.hide();
       }
     } else {
       $privateKey.removeClass('valid');
@@ -124,6 +132,7 @@ App.controller('private-key', function (page) {
       $next.parent().hide();
       $addressSection.hide();
       $balance.hide();
+      $pendingWarning.hide();
       listening = true;
     }
   }
@@ -223,12 +232,14 @@ App.controller('bitcoin-address', function (page) {
   var $viewDetails = $page.find('#view-tx');
   var $instructions = $page.find('.instructions');
   var $instructionsScan = $page.find('.instructions-scan');
+  var $instructionsNoSelf = $page.find('.self');
   var $help = $page.find('.help');
   var $helpFee = $page.find('.help-fee');
   $sweep.parent().hide();
   $scan.parent().hide();
   $video.parent().hide();
   $instructionsScan.hide();
+  $instructionsNoSelf.hide();
   $sent.hide();
   $tx.hide();
   $viewDetails.parent().hide();
@@ -239,10 +250,11 @@ App.controller('bitcoin-address', function (page) {
     qrcode.callback = function(data) {
       var address = parseBitcoinAddress(data);
       if (address) {
-        $address.val(address);
         $video.parent().hide();
         $instructions.hide();
         $instructionsScan.hide();
+        $instructionsNoSelf.hide();
+        $address.val(address);
         // setTimeout(function() {
         //   $video.html5_qrcode_stop();
         // }, 0);
@@ -258,6 +270,14 @@ App.controller('bitcoin-address', function (page) {
       if (!listening) return;
       listening = false;
       var valid = App.sweep.validateBitcoinAddress(address);
+
+      var key = new bitcore.PrivateKey(App.sweep.bitcoinPrivateKey);
+      var fromAddress = key.publicKey.toAddress();
+      if (fromAddress.toString() === address) {
+        valid = false;
+        $instructionsNoSelf.show();
+      }
+
       if (valid) {
         $address.addClass('valid');
         $address.removeClass('invalid');
@@ -288,11 +308,13 @@ App.controller('bitcoin-address', function (page) {
     $instructions.hide();
     $address.parent().hide();
     $instructionsScan.hide();
+    $instructionsNoSelf.hide();
     $sweep.parent().hide();
     if (typeof navigator.getUserMedia == 'function') {
       $video.parent().hide();
       $instructions.hide();
       $instructionsScan.hide();
+      $instructionsNoSelf.hide();
       $video.html5_qrcode_stop();
     }
     App.sweep.sweepBitcoins(App.sweep.bitcoinPrivateKey, App.sweep.bitcoinAddress, function(tx) {
