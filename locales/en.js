@@ -124,5 +124,9 @@
 	"What is a Network Fee?": "What is a Network Fee?",
 	"All Bitcoin transactions must include a small fee which is collected by the participants in the Bitcoin network.": "All Bitcoin transactions must include a small fee which is collected by the participants in the Bitcoin network.",
 	"You have pending transactions. Please wait at least 10 minutes and then try again.": "You have pending transactions. Please wait at least 10 minutes and then try again.",
-	"You are attempting to send the bitcoins to the same address you are sending from. This just wastes money.": "You are attempting to send the bitcoins to the same address you are sending from. This just wastes money."
+	"You are attempting to send the bitcoins to the same address you are sending from. This just wastes money.": "You are attempting to send the bitcoins to the same address you are sending from. This just wastes money.",
+	"You have scanned something that is not a private key. If you are scanning a paper wallet, make sure you scan the QR code of the private key.": "You have scanned something that is not a private key. If you are scanning a paper wallet, make sure you scan the QR code of the private key.",
+	"You have scanned something that is not a PUBLIC key.": "You have scanned something that is not a PUBLIC key.",
+	"You have scanned/entered something that is not a PRIVATE key. If you are scanning a Paper Wallet, make sure you scan the QR code of the PRIVATE key.": "You have scanned/entered something that is not a PRIVATE key. If you are scanning a Paper Wallet, make sure you scan the QR code of the PRIVATE key.",
+	"You have scanned/entered something that is not a PUBLIC key.": "You have scanned/entered something that is not a PUBLIC key."
 }

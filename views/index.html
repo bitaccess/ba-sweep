@@ -57,9 +57,9 @@
           <div class='instructions-scan'>
             {{ __("Or hit SCAN QR CODE to scan your key.") }}
           </div>
-          <div class='instructions-photo'>
-            {{ __("Or hit TAKE PHOTO to use a photo.") }}
-          </div>
+          <!-- <div class='instructions-photo'> -->
+          <!--   {{ __("Or hit TAKE PHOTO to use a photo.") }} -->
+          <!-- </div> -->
         </div>
         <div class='app-section'>
           <div id="video" style="width:300px;height:250px"></div>
@@ -67,12 +67,15 @@
         <div class='app-section'>
           <div id='scan' class='app-button btac-orange next'>{{ __("SCAN QR CODE") }}</div>
         </div>
-        <div class='app-section'>
-          <input class='photo' id='id-front-input' type='file' capture='camera' accept='image/*'>
-          <div id='photo' class='app-button btac-orange next'>{{ __("TAKE PHOTO") }}</div>
-        </div>
+        <!-- <div class='app-section'> -->
+        <!--   <input class='photo' id='id-front-input' type='file' capture='camera' accept='image/*'> -->
+        <!--   <div id='photo' class='app-button btac-orange next'>{{ __("TAKE PHOTO") }}</div> -->
+        <!-- </div> -->
         <div class='app-section'>
           <input id='private-key-input' class='app-input private-key underline' type='text' autofocus placeholder='L3tH1siSwhA7aPR1vAt3k3YLoOkSL1K3i7coN7A1nSyoURMoNi3S'>
+        </div>
+        <div class='app-section not-a-private-key'>
+          <div>{{ __("You have scanned/entered something that is not a PRIVATE key. If you are scanning a Paper Wallet, make sure you scan the QR code of the PRIVATE key.") }}</div>
         </div>
         <div class='app-section address'>
           <div>{{ __("Address") }}:&nbsp;<span id='address'></span></div>
@@ -117,6 +120,9 @@
         </div>
         <div class='app-section'>
           <input id='bitcoin-address-input' class='app-input bitcoin-address underline' type='text' autofocus placeholder='1MaNdth3n7H1s1SaB17co1NaDdR3sSoKaY'>
+        </div>
+        <div class='app-section not-a-public-key'>
+          <div>{{ __("You have scanned/entered something that is not a PUBLIC key.") }}</div>
         </div>
         <div class='app-section tx'>
           <div class='btc-amount'>{{ __("Amount") }}:&nbsp;<span id='tx-amount'>?</span>&nbsp;BTC</div>

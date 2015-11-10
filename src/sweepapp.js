@@ -57,6 +57,7 @@ App.controller('private-key', function (page) {
   var $txFee = $page.find('#tx-fee');
   var $help = $page.find('.help');
   var $helpFee = $page.find('.help-fee');
+  var $notPrivateKey = $page.find('.not-a-private-key');
   $wait.hide();
   $balance.hide();
   $pendingWarning.hide();
@@ -65,6 +66,7 @@ App.controller('private-key', function (page) {
   $video.parent().hide();
   $instructionsScan.hide();
   $addressSection.hide();
+  $notPrivateKey.hide();
 
   $photoButton.on('click', $photoInput.trigger.bind($photoInput, 'click'));
   $photoInput.on('change', function(e) {
@@ -85,19 +87,20 @@ App.controller('private-key', function (page) {
     qrcode.decode(App.sweep.photos['private-key-photo']);
   });
 
-  var listening = true;
   function privateKeyEntered() {
     var privateKey = $privateKey.val().trim();
     if (privateKey.length == 51 || privateKey.length == 52) {
-      if (!listening) return;
-      listening = false;
+      if (privateKey == App.sweep.bitcoinPrivateKey) return;
+      App.sweep.bitcoinPrivateKey = privateKey;
+
       var valid = App.sweep.validateBitcoinPrivateKey(privateKey);
       if (valid) {
+        console.log('new valid private key');
+        $notPrivateKey.hide();
         $privateKey.addClass('valid');
         $privateKey.removeClass('invalid');
         // $input.parent().hide();
         // clearInterval(timer);
-        App.sweep.bitcoinPrivateKey = privateKey;
 
         var key = new bitcore.PrivateKey(privateKey);
         var fromAddress = key.publicKey.toAddress();
@@ -115,8 +118,12 @@ App.controller('private-key', function (page) {
           $txFee.text(satoshiToBTC(10000)); // TODO: ensure this is consistent with what is actually used
           if (totals.unconfirmedBalance != 0) {
             $pendingWarning.show();
+            $txFee.parent().hide();
           } else if (totals.balance > 0) {
+            $txFee.parent().show();
             showButton();
+          } else {
+            $txFee.parent().hide();
           }
         });
       } else {
@@ -125,6 +132,7 @@ App.controller('private-key', function (page) {
         $addressSection.hide();
         $balance.hide();
         $pendingWarning.hide();
+        $notPrivateKey.show();
       }
     } else {
       $privateKey.removeClass('valid');
@@ -133,7 +141,6 @@ App.controller('private-key', function (page) {
       $addressSection.hide();
       $balance.hide();
       $pendingWarning.hide();
-      listening = true;
     }
   }
   // check every five seconds to support iOS pasting, which doesn't fire 'paste' event
@@ -150,17 +157,18 @@ App.controller('private-key', function (page) {
   $privateKey.on('keyup', privateKeyEntered);
   $privateKey.on('paste', privateKeyEntered);
 
+  $next.on('click', function(e) {
+    $next.parent().hide();
+    if (typeof navigator.getUserMedia == 'function') {
+      $video.parent().hide();
+      $instructions.hide();
+      $instructionsScan.hide();
+      $video.html5_qrcode_stop();
+    }
+    App.load('bitcoin-address');
+  });
+
   function showButton() {
-    $next.on('click', function(e) {
-      $next.parent().hide();
-      if (typeof navigator.getUserMedia == 'function') {
-        $video.parent().hide();
-        $instructions.hide();
-        $instructionsScan.hide();
-        $video.html5_qrcode_stop();
-      }
-      App.load('bitcoin-address');
-    });
     $next.parent().fadeIn();
   }
 
@@ -174,38 +182,48 @@ App.controller('private-key', function (page) {
   });
 
   function parseBitcoinPrivateKey(privateKeyURI) {
-    return privateKeyURI.replace(/bitcoin:/, '');
+    var key = privateKeyURI.replace(/.*bitcoin:/, '');
+    var valid = App.sweep.validateBitcoinPrivateKey(key);
+    if (valid) return key;
   }
 
-  if (typeof MediaStreamTrack === 'function') {
-    MediaStreamTrack.getSources(function(sources) {
-      var camera = sources.filter(function(source) {
-        return source.kind == 'video';
+  function showScanButtonIfPossible() {
+    if (typeof MediaStreamTrack === 'function') {
+      MediaStreamTrack.getSources(function(sources) {
+        var camera = sources.filter(function(source) {
+          return source.kind == 'video';
+        });
+        if (camera[0]) {
+          $scan.parent().show();
+          $instructions.show();
+          $instructionsScan.show();
+        }
       });
-      if (camera[0]) {
-        $scan.parent().show();
-        $instructionsScan.show();
-      }
-    });
+    }
   }
+  showScanButtonIfPossible();
 
   $scan.on('click', function(e) {
     $scan.parent().hide();
     $video.parent().show();
-    var listening = true;
     $video.html5_qrcode(function(data) {
-      // console.log('scan:', data);
-      if (!listening) return;
+      console.log('scan:', data);
       var privateKey = parseBitcoinPrivateKey(data);
       if (privateKey) {
-        listening = false;
-        $privateKey.val(privateKey);
-        $video.parent().hide();
-        $instructions.hide();
-        $instructionsScan.hide();
-        setTimeout(function() {
-          $video.html5_qrcode_stop();
-        }, 0);
+        $notPrivateKey.hide();
+        if ($privateKey.val() != privateKey) {
+          App.sweep.bitcoinPrivateKey = null;
+          $privateKey.val(privateKey);
+        }
+        // $video.parent().hide();
+        // $instructions.hide();
+        // $instructionsScan.hide();
+        // setTimeout(function() {
+        //   $video.html5_qrcode_stop();
+        // }, 0);
+      } else {
+        $privateKey.val('not a private key');
+        $notPrivateKey.show();
       }
     }, function(error){
       // console.log('scan error:', error);
@@ -235,6 +253,7 @@ App.controller('bitcoin-address', function (page) {
   var $instructionsNoSelf = $page.find('.self');
   var $help = $page.find('.help');
   var $helpFee = $page.find('.help-fee');
+  var $notPublicKey = $page.find('.not-a-public-key');
   $sweep.parent().hide();
   $scan.parent().hide();
   $video.parent().hide();
@@ -243,6 +262,7 @@ App.controller('bitcoin-address', function (page) {
   $sent.hide();
   $tx.hide();
   $viewDetails.parent().hide();
+  $notPublicKey.hide();
 
   $photoButton.on('click', $photoInput.trigger.bind($photoInput, 'click'));
   $photoInput.on('change', function(e) {
@@ -263,38 +283,44 @@ App.controller('bitcoin-address', function (page) {
     qrcode.decode(App.sweep.photos['address-photo']);
   });
 
-  var listening = true;
   function addressEntered() {
     var address = $address.val().trim();
     if (address.length >= 26 && address.length <= 35) {
-      if (!listening) return;
-      listening = false;
+      if (App.sweep.bitcoinAddress == address) return;
+      App.sweep.bitcoinAddress = address;
+
+      var canSend = false;
       var valid = App.sweep.validateBitcoinAddress(address);
 
-      var key = new bitcore.PrivateKey(App.sweep.bitcoinPrivateKey);
-      var fromAddress = key.publicKey.toAddress();
-      if (fromAddress.toString() === address) {
-        valid = false;
-        $instructionsNoSelf.show();
-      }
-
       if (valid) {
+        var key = new bitcore.PrivateKey(App.sweep.bitcoinPrivateKey);
+        var fromAddress = key.publicKey.toAddress();
+        if (fromAddress.toString() === address) {
+          $instructionsNoSelf.show();
+        } else {
+          canSend = true;
+          $instructionsNoSelf.hide();
+        }
+        $notPublicKey.hide();
         $address.addClass('valid');
         $address.removeClass('invalid');
         // $input.parent().hide();
+      } else {
+        $instructionsNoSelf.hide();
+        $notPublicKey.show();
+        $address.removeClass('valid');
+        $address.addClass('invalid');
+      }
+
+      if (canSend) {
         $sweep.parent().show();
         // clearInterval(timer);
         showSweepButton();
-        App.sweep.bitcoinAddress = address;
-      } else {
-        $address.removeClass('valid');
-        $address.addClass('invalid');
       }
     } else {
       $address.removeClass('valid');
       $address.removeClass('invalid');
       $sweep.parent().hide();
-      listening = true;
     }
   }
   // check every five seconds to support iOS pasting, which doesn't fire 'paste' event
@@ -357,38 +383,48 @@ App.controller('bitcoin-address', function (page) {
   });
 
   function parseBitcoinAddress(addressURI) {
-    return addressURI.replace(/bitcoin:/, '');
+    var address = addressURI.replace(/.*bitcoin:/, '');
+    var valid = App.sweep.validateBitcoinAddress(address);
+    if (valid) return address;
   }
 
-  if (typeof MediaStreamTrack === 'function') {
-    MediaStreamTrack.getSources(function(sources) {
-      var camera = sources.filter(function(source) {
-        return source.kind == 'video';
+  function showScanButtonIfPossible() {
+    if (typeof MediaStreamTrack === 'function') {
+      MediaStreamTrack.getSources(function(sources) {
+        var camera = sources.filter(function(source) {
+          return source.kind == 'video';
+        });
+        if (camera[0]) {
+          $scan.parent().show();
+          $instructionsScan.show();
+        }
       });
-      if (camera[0]) {
-        $scan.parent().show();
-        $instructionsScan.show();
-      }
-    });
+    }
   }
+  showScanButtonIfPossible();
 
   $scan.on('click', function(e) {
     $scan.parent().hide();
     $video.parent().show();
-    var listening = true;
     $video.html5_qrcode(function(data) {
       // console.log('scan:', data);
-      if (!listening) return;
       var address = parseBitcoinAddress(data);
       if (address) {
-        listening = false;
-        $address.val(address);
-        $video.parent().hide();
-        $instructions.hide();
-        $instructionsScan.hide();
-        setTimeout(function() {
-          $video.html5_qrcode_stop();
-        }, 0);
+        $notPublicKey.hide();
+        if ($address.val() != address) {
+          App.sweep.bitcoinAddress = null;
+          $address.val(address);
+        }
+        // $video.parent().hide();
+        // $instructions.hide();
+        // $instructionsScan.hide();
+        // setTimeout(function() {
+        //   $video.html5_qrcode_stop();
+        // }, 0);
+      } else {
+        $instructionsNoSelf.hide();
+        $address.val('not a public key');
+        $notPublicKey.show();
       }
     }, function(error){
       // console.log('scan error:', error);
