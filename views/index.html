@@ -30,12 +30,24 @@
           <img class='sms' src='/images/logo.png'>
         </div>    
         <div class='app-section start-page'>
-          {{ __("This app will help you collect all the bitcoins from a private key and send them to an address.") }}
+          {{ __("Send your paper wallet balance directly to a wallet that doesn’t support paper wallet imports. This tool sweeps the private key and sends the balance to a single Bitcoin address of your choice.") }}
         </div>
         <div class='app-section start-page'>
-          {{ __("NOTE: This app is ENTIRELY browser-based and we NEVER see your private key or any other details about your transaction.") }}
-          {{ __("We know 2 things: 1. That someone loaded this page, and 2. that someone used it successfully when they do (though again, we gather no details about the transaction).") }}
-          {{ __("The reason we provide this service is simply to offload some of the support requests we regularly receive.") }}
+          <p> {{ __("Please note:") }} </p>
+          <ul>
+            <li> {{ __("NEVER use this tool to send Bitcoin to an address you do not control.") }} </li>
+            <li> </li>
+            <li> {{ __("The full balance will be removed from the paper wallet. It is not possible to send partial amounts.") }} </li>
+            <li> </li>
+            <li> {{ __("DO NOT use this tool if you do not trust the source. Make sure you see a green ‘lock’ in your browser and that you’re reading this on https://transfer.bitaccess.co.") }} </li>
+            <li> </li>
+            <li> {{ __("This site will ask for your paper wallet private key to send the funds.") }} </li>
+            <li> </li>
+            <li> {{ __("We do not transmit, store, or save your private key.") }} </li>
+          </ul>
+        </div>
+        <div class='app-section start-page'>
+          {{ __("This service is provided with ABSOLUTELY NO WARRANTY and BitAccess IS NOT RESPONSIBLE FOR ANY LOST FUNDS. Once Bitcoin is sent, there is absolutely no way to reverse the transaction. Use this tool at your own risk.") }}
         </div>
         <div class='app-section start-page'>
           <div id='buy' class='app-button btac-orange next'>{{ __("SEND YOUR BITCOINS") }}</div>
@@ -74,7 +86,7 @@
           <input id='private-key-input' class='app-input private-key underline' type='text' autofocus placeholder='L3tH1siSwhA7aPR1vAt3k3YLoOkSL1K3i7coN7A1nSyoURMoNi3S'>
         </div>
         <div class='app-section not-a-private-key'>
-          <div>{{ __("You have scanned/entered something that is not a PRIVATE key. If you are scanning a Paper Wallet, make sure you scan the QR code of the PRIVATE key.") }}</div>
+          <div>{{ __("You have scanned/entered something that is not a PRIVATE key. If you are scanning a paper wallet, make sure you scan the QR code of the PRIVATE key.") }}</div>
         </div>
         <div class='app-section address'>
           <div>{{ __("Address") }}:&nbsp;<span id='address'></span></div>
@@ -116,11 +128,14 @@
         <div class='app-section'>
           <div id='scan' class='app-button btac-orange next'>{{ __("SCAN QR CODE") }}</div>
         </div>
+        <div class='instructions'>
+          {{ __("ONLY enter an address that YOU CONTROL.") }}
+        </div>
         <div class='app-section'>
           <input id='bitcoin-address-input' class='app-input bitcoin-address underline' type='text' autofocus placeholder='1MaNdth3n7H1s1SaB17co1NaDdR3sSoKaY'>
         </div>
         <div class='app-section not-a-public-key'>
-          <div>{{ __("You have scanned/entered something that is not a PUBLIC key.") }}</div>
+          <div>{{ __("Error: You have scanned/entered something that is not a Bitcoin Address.") }}</div>
         </div>
         <div class='app-section tx'>
           <div class='btc-amount'>{{ __("Amount") }}:&nbsp;<span id='tx-amount'>?</span>&nbsp;BTC</div>
@@ -164,13 +179,18 @@
       };
       App.sweep.dialogHelpBitcoinAddress = {
         title        : '{{ __("What is a Bitcoin Address?") }}',
-        text         : '{{ __("It is a thing you need to receive bitcoins.") }}',
-        cancelButton : '{{ __("Okay, I get it.") }}'
+        text         : '{{ __("It is like a bank account number which you can provide to receive bitcoins. It usually starts with a 1 or a 3, is case sensitive, and is about 26-35 characters long.") }}',
+        cancelButton : '{{ __("Got it.") }}'
+      };
+      App.sweep.dialogHelpBitcoinPrivateKey = {
+        title        : '{{ __("What is a Bitcoin Private Key?") }}',
+        text         : '{{ __("Your private key will be located on your BitAccess paper wallet under the heading “private”. This code is what gives you access to the funds held by the paper wallet.") }}',
+        cancelButton : '{{ __("Got it.") }}'
       };
       App.sweep.dialogHelpFee = {
         title        : '{{ __("What is a Network Fee?") }}',
         text         : '{{ __("All Bitcoin transactions must include a small fee which is collected by the participants in the Bitcoin network.") }}',
-        cancelButton : '{{ __("Okay, I get it.") }}'
+        cancelButton : '{{ __("Got it.") }}'
       };
       App.sweep.textFinishedTitle = '{{ __("Finished") }}';
     </script>
