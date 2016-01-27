@@ -188,7 +188,8 @@ App.controller('private-key', function (page) {
   }
 
   function showScanButtonIfPossible() {
-    if (typeof MediaStreamTrack === 'function') {
+    if (typeof MediaStreamTrack === 'function' &&
+        typeof MediaStreamTrack.getSources === 'function') {
       MediaStreamTrack.getSources(function(sources) {
         var camera = sources.filter(function(source) {
           return source.kind == 'video';
@@ -389,7 +390,8 @@ App.controller('bitcoin-address', function (page) {
   }
 
   function showScanButtonIfPossible() {
-    if (typeof MediaStreamTrack === 'function') {
+    if (typeof MediaStreamTrack === 'function' &&
+        typeof MediaStreamTrack.getSources === 'function') {
       MediaStreamTrack.getSources(function(sources) {
         var camera = sources.filter(function(source) {
           return source.kind == 'video';
