@@ -72,7 +72,6 @@ App.controller('private-key', function (page) {
   $photoInput.on('change', function(e) {
     App.sweep.incomingImage('private-key-photo', e);
     qrcode.callback = function(data) {
-      console.log('data', data);
       var privateKey = parseBitcoinPrivateKey(data);
       if (privateKey) {
         $privateKey.val(privateKey);
@@ -95,7 +94,6 @@ App.controller('private-key', function (page) {
 
       var valid = App.sweep.validateBitcoinPrivateKey(privateKey);
       if (valid) {
-        console.log('new valid private key');
         $notPrivateKey.hide();
         $privateKey.addClass('valid');
         $privateKey.removeClass('invalid');
@@ -111,7 +109,6 @@ App.controller('private-key', function (page) {
         $pendingWarning.hide();
         getBalance(fromAddress, function(err, totals) {
           $wait.hide();
-          console.log(totals);
           $balance.show();
           $balanceConfirmed.text(totals.balance);
           $balanceUnconfirmed.text(totals.unconfirmedBalance);
@@ -208,7 +205,6 @@ App.controller('private-key', function (page) {
     $scan.parent().hide();
     $video.parent().show();
     $video.html5_qrcode(function(data) {
-      console.log('scan:', data);
       var privateKey = parseBitcoinPrivateKey(data);
       if (privateKey) {
         $notPrivateKey.hide();
@@ -227,9 +223,7 @@ App.controller('private-key', function (page) {
         $notPrivateKey.show();
       }
     }, function(error){
-      // console.log('scan error:', error);
     }, function(videoError){
-      // console.log('video error:', videoError);
       App.dialog(App.sweep.dialogErrorReload, function() {
       });
     });
@@ -345,7 +339,6 @@ App.controller('bitcoin-address', function (page) {
       $video.html5_qrcode_stop();
     }
     App.sweep.sweepBitcoins(App.sweep.bitcoinPrivateKey, App.sweep.bitcoinAddress, function(tx) {
-      console.log(tx, tx.outputAmount);
       $txAmount.text(satoshiToBTC(tx.outputAmount));
       $txFee.text(satoshiToBTC(tx.getFee()));
       $tx.fadeIn();
@@ -409,7 +402,6 @@ App.controller('bitcoin-address', function (page) {
     $scan.parent().hide();
     $video.parent().show();
     $video.html5_qrcode(function(data) {
-      // console.log('scan:', data);
       var address = parseBitcoinAddress(data);
       if (address) {
         $notPublicKey.hide();
@@ -429,9 +421,7 @@ App.controller('bitcoin-address', function (page) {
         $notPublicKey.show();
       }
     }, function(error){
-      // console.log('scan error:', error);
     }, function(videoError){
-      // console.log('video error:', videoError);
       App.dialog(App.sweep.dialogErrorReload, function() {
       });
     });
@@ -511,14 +501,11 @@ App.sweep.sweepBitcoins = function(privateKey, toAddress, onTx, done) {
     if (!transaction) {
       return done(new Error('unable to create transaction'));
     }
-    console.log('transaction:', transaction.toJSON());
     App.sweep.lastTransaction = transaction;
-    console.log('tx:', transaction, transaction.outputAmount);
     onTx(transaction);
 
     if (confirmedUnspents.length < unspents.length) {
       var unconfirmedSatoshis = App.sweep.tallyInputs(App.sweep.filterInputsByConfirmation(unspents, false));
-      console.log('unconfirmedSatoshis:', unconfirmedSatoshis);
 
       var dialog = App.sweep.dialogUnconfirmedInputs;
       dialog.text = dialog.text.replace(/TT_AMOUNT/, satoshiToBTC(unconfirmedSatoshis) + '');
@@ -552,9 +539,7 @@ App.sweep.tallyInputs = function(inputs) {
 
 App.sweep.createTransaction = function(privateKey, toAddress, unspents) {
   var total = App.sweep.tallyInputs(unspents);
-  console.log('total unspent:', total);
   var amount = total - 10000; // create fee
-  console.log('minus fee:', amount);
   if (amount > 0) {
     var transaction = new bitcore.Transaction()
       .from(unspents)
@@ -566,7 +551,6 @@ App.sweep.createTransaction = function(privateKey, toAddress, unspents) {
 
 App.sweep.getBalance = function(address, done) {
   var url = '/app/info/' + address;
-  console.log('url:', url);
   $.ajax({
     type: 'GET',
     url: url,
@@ -576,7 +560,6 @@ App.sweep.getBalance = function(address, done) {
       done(null, data);
     },
     error: function(xhr, type, err) {
-      // console.log(err);
       done(new Error('unknown error'), err);
     }
   });
@@ -584,7 +567,6 @@ App.sweep.getBalance = function(address, done) {
 
 App.sweep.getUnspents = function(address, done) {
   var url = '/app/unspents/' + address;
-  console.log('url:', url);
   $.ajax({
     type: 'GET',
     url: url,
@@ -594,7 +576,6 @@ App.sweep.getUnspents = function(address, done) {
       done(null, data);
     },
     error: function(xhr, type, err) {
-      // console.log(err);
       done(new Error('unknown error'), err);
     }
   });
@@ -612,7 +593,6 @@ App.sweep.broadcastTransaction = function(transaction, done) {
       done(null, data);
     },
     error: function(xhr, type, err) {
-      // console.log(err);
       done(new Error('unknown error'), err);
     }
   });
