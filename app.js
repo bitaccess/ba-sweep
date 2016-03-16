@@ -1,9 +1,6 @@
 
 var path = require('path');
 
-var TESTING = process.env.BITACCESS_TEST == '1';
-if (!TESTING) require('newrelic');
-
 var express    = require('express');
 var swig       = require('swig');
 var favicon    = require('serve-favicon');
