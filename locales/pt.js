@@ -1,7 +1,7 @@
 {
 	"Mobile Verification": "Mobile Verification",
-	"BitAccess BTM Identity Verification": "BitAccess BTM Identity Verification",
-	"This app will enable you to submit photos of your face and ID document for the purpose of identity verification by BitAccess BTMs.": "This app will enable you to submit photos of your face and ID document for the purpose of identity verification by BitAccess BTMs.",
+	"Bitaccess BTM Identity Verification": "Bitaccess BTM Identity Verification",
+	"This app will enable you to submit photos of your face and ID document for the purpose of identity verification by Bitaccess BTMs.": "This app will enable you to submit photos of your face and ID document for the purpose of identity verification by Bitaccess BTMs.",
 	"Once your identity has been verified, you will receive an SMS notification.": "Once your identity has been verified, you will receive an SMS notification.",
 	"Please enter your mobile number with country and area codes.": "Please enter your mobile number with country and area codes.",
 	"Next": "Next",
@@ -38,7 +38,7 @@
 	"Please tap the 'Back' button and try again.": "Please tap the 'Back' button and try again.",
 	"Nationality and Address": "Nationality and Address",
 	"Select ID type": "Select ID type",
-	"Verify your identity for BitAccess BTMs.": "Verify your identity for BitAccess BTMs.",
+	"Verify your identity for Bitaccess BTMs.": "Verify your identity for Bitaccess BTMs.",
 	"Enter your mobile number to receive a verification code on your mobile device.": "Enter your mobile number to receive a verification code on your mobile device.",
 	"Enter your verification code.": "Enter your verification code.",
 	"Tap the image below to upload a photo of the FRONT of your ID card.": "Tap the image below to upload a photo of the FRONT of your ID card.",
