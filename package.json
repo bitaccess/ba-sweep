@@ -9,7 +9,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "bitcore-explorers": "^1.0.1",
+    "request": "^2.51.0",
     "bitcore-lib": "^0.13.8",
     "body-parser": "~1.10.2",
     "debug": "~2.1.1",
