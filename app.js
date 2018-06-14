@@ -1,99 +1,108 @@
 
-var path = require('path');
+var path = require('path')
 
-var express    = require('express');
-var swig       = require('swig');
-var favicon    = require('serve-favicon');
-var logger     = require('morgan');
-var bodyParser = require('body-parser');
-var enforce    = require('express-sslify');
-var helmet     = require('helmet');
-var I18n       = require('i18n-2');
- 
-var appRoutes = require('./routes/app');
+var express = require('express')
+var swig = require('swig')
+var favicon = require('serve-favicon')
+var logger = require('morgan')
+var bodyParser = require('body-parser')
+var enforce = require('express-sslify')
+var helmet = require('helmet')
+var I18n = require('i18n-2')
+
+var appRoutes = require('./routes/app')
 
 var app = express();
 
-(function() {
-  var locales = ['en', 'hr_hr', 'da', 'nl', 'nl_be', 'fi', 'fr', 'de', 'hu', 'it', 'sl_si', 'es', 'sv'];
-  I18n.expressBind(app, { locales: locales });
-  app.use(function(req, res, next) {
-    req.i18n.setLocaleFromQuery();
-    next();
-  });
-})();
+(function () {
+  var locales = ['en', 'hr_hr', 'da', 'nl', 'nl_be', 'fi', 'fr', 'de', 'hu', 'it', 'sl_si', 'es', 'sv']
+  I18n.expressBind(app, { locales: locales })
+  app.use(function (req, res, next) {
+    req.i18n.setLocaleFromQuery()
+    next()
+  })
+})()
 
-console.log('environment:', app.get('env'));
+console.log('environment:', app.get('env'))
 if (app.get('env') === 'production') {
   // force redirect to HTTPS on Heroku
-  console.log('forcing redirect to HTTPS for all requests.');
-  var reverseProxy = true;
-  app.use(enforce.HTTPS(reverseProxy));
+  console.log('forcing redirect to HTTPS for all requests.')
+  var reverseProxy = true
+  app.use(enforce.HTTPS(reverseProxy))
 }
 
 // view engine setup
-app.engine('html', swig.renderFile);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
+app.engine('html', swig.renderFile)
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'html')
 
-app.set('view cache', false);
-swig.setDefaults({ cache: false });
+app.set('view cache', false)
+swig.setDefaults({ cache: false })
 
 // uncomment after placing your favicon in /public
-app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'))
 if (app.get('env') === 'development') {
-  app.use(logger('dev'));
+  app.use(logger('dev'))
 }
 
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json())
+app.use(express.static(path.join(__dirname, 'public')))
 if (app.get('env') === 'development') {
   // for source maps
-  app.use(express.static(path.join(__dirname, 'src')));
+  app.use(express.static(path.join(__dirname, 'src')))
 }
 
 // add additional security practices
-app.use(helmet());
+app.use(helmet())
 
-var router = express.Router();
+var router = express.Router()
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   res.render('index', {
     lang: req.query.lang
-  });
-});
+  })
+})
 
-app.use('/', router);
+router.get('/backup', function (req, res) {
+  res.render('backup', {})
+})
+router.get('/android', function (req, res) {
+  res.render('android', {})
+})
+router.get('/iphone', function (req, res) {
+  res.render('iphone', {})
+})
 
-app.use('/app', appRoutes);
+app.use('/', router)
+
+app.use('/app', appRoutes)
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+app.use(function (req, res, next) {
+  var err = new Error('Not Found')
+  err.status = 404
+  next(err)
+})
 
 // error handlers
 
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500).send(err.message);
-  });
+  app.use(function (err, req, res, next) {
+    res.status(err.status || 500).send(err.message)
+  })
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  console.log(err.message);
-  res.status(err.status || 500).send();
+app.use(function (err, req, res, next) {
+  console.log(err.message)
+  res.status(err.status || 500).send()
   // res.render('error', {
   //     message: err.message,
   //     error: {}
   // });
-});
+})
 
-module.exports = app;
-
+module.exports = app
