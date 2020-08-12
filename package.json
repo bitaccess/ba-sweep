@@ -16,7 +16,7 @@
     "express-sslify": "^0.1.1",
     "helmet": "^0.9.1",
     "i18n-2": "^0.4.6",
-    "morgan": "~1.5.1",
+    "morgan": "~1.9.1",
     "newrelic": "^1.22.1",
     "request": "^2.88.0",
     "serve-favicon": "~2.2.0",
