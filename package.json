@@ -11,7 +11,7 @@
   "dependencies": {
     "bitcore-lib": "^0.13.8",
     "body-parser": "~1.10.2",
-    "debug": "~2.1.1",
+    "debug": "~2.6.9",
     "express": "^4.16.4",
     "express-sslify": "^0.1.1",
     "helmet": "^0.9.1",
